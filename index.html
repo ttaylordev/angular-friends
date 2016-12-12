@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="dm8">
 <head>
   <title>Angular Friends</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
-<body>
+<body ng-controller="FriendController">
 
   <h1>The <strong>facebook</strong> Friend Machine</h1>
 
@@ -14,12 +14,12 @@
     <form class="form-inline searchForm" role="form">
       <div class="form-group">
 
-        <input class="form-control" placeholder="Search Anything About Your Friends">
+        <!-- <input class="form-control" placeholder="Search Anything About Your Friends" ng-model="searchTerm"> -->
         <!-- STEP 5: Get rid of the one above when you uncomment the below-->
-          <!--
-        <input class="form-control" placeholder="Search Name">
-        <input class="form-control" placeholder="Search Location">
-          -->
+
+        <input class="form-control" placeholder="Search Name" ng-model="searchName">
+        <input class="form-control" placeholder="Search Location" ng-model="searchLoc">
+
 
         <select class="input-medium">
           <option>Name</option>
@@ -37,8 +37,28 @@
       </div>
     </form>
 
+
     <ul>
-      <li class='friend'>
+      <li class="friend" ng-repeat="homie in friends | filter:searchName:strict | filter:searchLoc:homie.current_location:strict" >
+        <img class="profile-pic" ng-src="{{homie.pic_square}}"/>
+        <h3>{{homie.name}}</h3>
+        <div ng-if="homie.current_location" class="location">
+          {{homie.current_location.city}},  {{homie.current_location.state}}
+        </div>
+
+        <div ng-if="homie.status.message"class="status">
+          {{homie.status.message.split("#")[0]}}
+          <!-- Time: {{homie.status.time}}
+          comments : {{homie.status.comment_count}}<span class="hashtag"></span> -->
+          <!-- <span class="hashtag">{{homie.status.message.split("#")[1]}}</span> -->
+          <span class="hashtag" ng-repeat = "hash in homie.status.message.split('#')" ng-hide="$first" >#{{hash}} </span>
+        </div>
+
+        <div ng-if="homie.friend_count" class="num-friends">
+          Friends: {{homie.friend_count}}
+        </div>
+      </li>
+      <!-- <li class='friend'>
         <img class="profile-pic" src='http://placebear.com/50/50.jpg'>
 
         <h3>Cali Fornia</h3>
@@ -48,13 +68,13 @@
         </div>
 
         <div class="status">
-          Status: I hate the snow. I wish I was on the beach right now!!! <span class="hashtag">#ihateprovo</span>
+          I hate the snow. I wish I was on the beach right now!!! <span class="hashtag">{{status.message.split("#")[0]}}</span>
         </div>
 
         <div class="num-friends">
           Friends: 1,367
         </div>
-      </li>
+      </li> -->
     </ul>
   </div>
 
